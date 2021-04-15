@@ -6,7 +6,7 @@
 The Ontario Tech Vulnerability reporting system. contributions are welcome :) 
 
 <p align="center">
-  <img src="https://github.com/leadcentaur/otu-threat-center/blob/2a481f7ca76a677599b88be673a448829d54ea0e/banner.JPG">
+  <img src="https://github.com/leadcentaur/otu-threat-center/blob/ebec59ad22884f40ca018d4094b6a68bc33f6a56/banner.JPG">
 </p>
 
 ## Requirements 
