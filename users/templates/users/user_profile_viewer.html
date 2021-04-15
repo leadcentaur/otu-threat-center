@@ -1,0 +1,13 @@
+{% extends "main/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+   <div class="content-section">
+  <div class="media">
+    <img class="rounded-circle account-img" src="{{ other_user_profile.user.profile.img.url }}">
+    <div class="media-body">
+      <h2 class="account-heading">{{ other_user_profile.nickname }}</h2>
+       <p class="text-secondary">Member since {{ other_user_profile.user.date_joined }}</p>
+    </div>
+  </div>
+       <p></p>
+{% endblock content %}

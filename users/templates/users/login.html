@@ -1,0 +1,5 @@
+{% extends "main/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+   <h4>Please login with <a href="{% url 'social:begin' 'google-oauth2' %}">Google</a></h4>
+{% endblock content %}

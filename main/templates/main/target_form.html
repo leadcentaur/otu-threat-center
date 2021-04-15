@@ -1,0 +1,49 @@
+{% extends "main/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+{% if targets %}
+<table class="table ">
+ <h2 class="p-3">In-Scope Targets</h2>
+    <hr>
+  {% csrf_token %}
+  <thead class="thead-dark">
+    <tr>
+      <th id="table-centered" scope="col">Asset</th>
+      <th id="table-centered" scope="col">Hostname</th>
+      <th id="table-centered" scope="col">IP/IP Range</th>
+      <th id="table-centered" scope="col">Service ports</th>
+      <th id="table-centered" scope="col">Owner</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for target in targets %}
+    <tr>
+      <td id="table-centered" >{{ target.get_asset_display }}</td>
+      <td id="table-centered" >{{ target.hostname }}</td>
+      <td id="table-centered" >{{ target.iprange }}</td>
+      <td id="table-centered" >{{ target.ports }}</td>
+      <td id="table-centered" >{{ target.get_owner_display }}</td>
+    </tr>
+   {% endfor %}
+  </tbody>
+</table>
+{% else  %}
+    <h4>There are currently no targets listed.</h4>
+{% endif %}
+
+{% if user.is_superuser %}
+
+<form method="POST">
+    {% csrf_token %}
+    <fieldset class="form-group">
+        <legend class="border-bottom mb-4">Add target</legend>
+        {{ form|crispy }}
+    </fieldset>
+    <div class="form-group">
+        <button class="btn btn-outline-info" type="submit">Add Target</button>
+    </div>
+</form>
+
+{% endif %}
+{% endblock content %}

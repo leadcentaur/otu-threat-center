@@ -1,0 +1,88 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block content %}
+<div class="container">
+  <div class="row">
+     <div class="col-md-3 border p-0 rounded 3">
+         <div class="card-header " id="report-header">
+                <h2 class="mb-0"> Reports </h2>
+         </div>
+         {% for report in report_list %}
+          <div class="card-header border p-1 rounded 3" id="report-{{ report.id }}">
+                <a class="btn btn-secondary btn-m mt-1 mb-1" style="width:100%" href="{% url 'inbox' report.id %}" title="{{ report.title }}">Report: #{{ report.id }}
+                {% if report.new %} (new) {% endif %}</a>
+          </div>
+         {% endfor %}
+     </div>
+     <div class="col-md-9 border p-1 rounded 3">
+         <div class="row">
+             <div class="col-md-12">
+                 <div class="card-header border p-1 rounded 3" id="report-detail-header">
+                    <h2 class="mb-0"> Report Details </h2>
+                 </div>
+             </div>
+         </div>
+         <div class="row">
+             <div class="col-md-6">
+                <div class="card-header border p-2 rounded 3" id="report-detail-number">
+                    <h6 class="mb-2"> Report Number: {{report.id}} </h6>
+                </div>
+             </div>
+             <div class="col-md-6">
+                 <div class="card-header border p-2 rounded 3" id="report-detail-status">
+                    <h6 class="mb-2"> Report Status: {{report.get_status_display}} </h6>
+                </div>
+             </div>
+         </div>
+         <div class="row">
+            <div class="col-md-12">
+                <article class="media content-section">
+                    <div class="media-body">
+                        <h3 class="article-title">{{ report.title }}</h3>
+                        <p class="article-content">{{ report.details }}</p>
+                        <small class="article-content">{{ report.get_classification_display}} - </small>
+                        <small class="article-content">{{ report.get_asset_display}}</small>
+                    </div>
+                </article>
+            </div>
+         </div>
+         <div class="row">
+             <div class="col-md-12">
+                 <div class="card-header border p-2 rounded 3" id="messages-header">
+                    <h2 class="mb-0"> Messages </h2>
+                 </div>
+                 <article class="media content-section">
+                  <div class="media-body p-2 rounded 3">
+                        {% for message in conversation %}
+                            <p class="article-content"> {{message.sender}}:  {{ message.body }}</p>
+                            <img class="img-fluid" src={{message.image}}>
+                        {% endfor %}
+                  </div>
+                </article>
+             </div>
+         </div>
+          {% if message_status %}
+         <div class="row">
+             <div class="col-md-12">
+                 <div class="card-header" id="message-status">
+                     <h5>Image was invalid, either your image is too large (more than 5MB), your image is not in the correct format (jpg, jpeg, png), or you have reached the maximum number of images for this thread (25)</h5>
+                 </div>
+         </div>
+         </div>
+         {% endif %}
+         <div class="row">
+             <div class="col-md-12">
+                  <form method="POST" enctype="multipart/form-data">
+                      {% csrf_token %}
+                      <div class="form-group">
+                        <input class="form-control mb-1" id="inputsm" name="message_text" type="text">
+                          <input type="submit" value="Send">
+                          <input type="file" id="message_file" name="message_image">
+                      </div>
+                </form>
+             </div>
+         </div>
+        </div>
+    </div>
+  </div>
+{% endblock content %}

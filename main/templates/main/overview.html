@@ -1,0 +1,103 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block content %}
+{% load crispy_forms_tags %}
+
+<head>
+</head>
+    {% if user.legal.terms_accepted == False %}
+        <h4 class="pt-3">User Legal Agreement: </h4>
+        <hr>
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <fieldset class="form-group">
+        <br>
+            <textarea disabled name="disclaimer_text" cols="40" rows="10" class="textarea form-control" required id="id_disclaimer_text">The content of this email is confidential and intended for the recipient specified in message only. It is strictly forbidden to share any part of this message with any third party, without a written consent of the sender. If you received this message by mistake, please reply to this message and follow with its deletion, so that we can ensure such a mistake does not occur in the future.This message has been sent as a part of discussion between [Sender’s name] and the addressee whose name is specified above. Should you receive this message by mistake, we would be most grateful if you informed us that the message has been sent to you. In this case, we also ask that you delete this message from your mailbox, and do not forward it or any part of it to anyone else. Thank you for your cooperation and understanding.
+            </textarea>
+        <br>
+        {{ n_form|crispy }}
+        {{ l_form.email_confirmation|as_crispy_field }}
+    </fieldset>
+    <div class="form-group">
+        <input class="btn btn-outline-primary" type="submit" value="Accept" name="Accept">&nbsp;&nbsp;
+        <input class="btn btn-outline-danger" type="submit" value="Decline" name="Decline">
+    </div>
+</form>
+
+
+    {% else %}
+
+    {% if system_points %}
+    <h2>LeaderBoard</h2>
+    <hr>
+
+    <table class="table">
+      <thead class="thead-dark " id="table-centered">
+        <tr>
+          <th scope="col">Rank</th>
+          <th scope="col">Name</th>
+          <th scope="col">Verified Reports</th>
+          <th scope="col">Submitted Reports</th>
+            <th scope="col">Points</th>
+        </tr>
+      </thead>
+      <tbody>
+      {% for usr in leaderboard|dictsortreversed:"author.points"|slice:":5" %}
+        <tr>
+          <td id="table-centered">{{ forloop.counter }}</td>
+            <a><td id="table-centered"><a href="{% url 'profile-detail' usr.author.profile_id %}">{{ usr.author.name }}</a></td>
+          <td id="table-centered">{{ usr.author.verified_reports }}</td>
+          <td id="table-centered">{{ usr.author.submitted_reports }}</td>
+          <td id="table-centered">{{ usr.author.points }}</td>
+        </tr>
+      {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <h2>LeaderBoard</h2>
+        <hr>
+    <div class="alert alert-info" role="alert">
+        No leaderboard data available.
+      </div>
+    {% endif %}
+    <h3>Recent Activity</h3>
+    <hr>
+     {% if reports %}
+          {% for report in reports|slice:":5" %}
+               <div class="border border-dark p-5 rounded 3" >
+                   <h4><a class="article-title" href="{% url 'report-detail' report.id %}">{{ report.title }}</a></h4>
+                   <H6>Disclosed Report #{{report.id}} By {{ report.author.user.profile.username }}</H6>
+                   <hr>
+                   <p><span>Details: </span><span>{{ report.details|truncatewords:"30" }}...</span></p>
+
+                   {% if report.severity == "critical" or report.severity == "very_high" %}
+                   <div class="alert alert-danger">
+                   {% elif report.severity == "high" %}
+                       <div class="alert alert-danger">
+                   {% elif report.severity == "medium" %}
+                       <div class="alert alert-primary">
+                   {% elif report.severity == "low" %}
+                       <div class="alert alert-secondary">
+                    {% endif %}
+                           Severitiy: {{ report.get_severity_display }}<br>
+                           Classification: {{ report.get_classification_display }}<br>
+                           {{ report.date_submitted|timesince }} Ago
+                   </div>
+               </div>
+           <br>
+          {% endfor %}
+       </div>
+    </div>
+
+    {% else %}
+     <div class="alert alert-info" role="alert">
+      There are currently no reports in the system.
+      </div>
+    {% endif %}
+    {% endif %}
+
+
+
+
+
+{% endblock content %}

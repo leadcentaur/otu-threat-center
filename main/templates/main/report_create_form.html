@@ -1,0 +1,35 @@
+{% extends "main/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+
+
+<div class="alert alert-primary">
+    Reports must be of high quality. Submitting low quality reports with poor details or explanations will get you banned from this site.
+</div>
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+    <fieldset class="form-group">
+        <legend class="border-bottom mb-4">Submit Vulnerability Report</legend>
+        {{ form.title|as_crispy_field }}
+        {{ form.details|as_crispy_field }}
+        {{ form.asset|as_crispy_field }}
+        {{ form.classification|as_crispy_field }}
+        {{ form.severity|as_crispy_field }}
+        <div class="container">
+  <div class="row">
+    <div class="col">
+      {{ form.img_a }}
+        {{ form.img_a.errors }}
+    </div>
+    <div class="col-8">
+      {{ form.img_b }}
+    </div>
+</div>
+    </fieldset>
+    <div class="form-group">
+        <button class="btn btn-outline-info" type="submit">Submit Report</button>
+    </div>
+    <h4>{{ form.img_a.errors }}{{ form.img_b.errors }}</h4>
+</form>
+{% endblock content %}

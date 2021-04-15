@@ -1,0 +1,29 @@
+{% extends "main/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+<form method="POST" enctype="multipart/form-data" xmlns="http://www.w3.org/1999/html"
+      xmlns="http://www.w3.org/1999/html">
+      {% csrf_token %}
+      <fieldset class="form-group">
+          <legend class="border-bottom mb-4 p-2">VPN Info</legend>
+
+<div id="div_id_email" class="form-group">
+    <label for="id_email" class=" requiredField">VPN username</label>
+    <div class=""> <input type="email" name="email" value="{{ vpn_user.email  }}" class="emailinput form-control" required disabled id="id_email"> </div> </div>
+
+<div id="div_id_pass" class="form-group">
+    <label for="id_email" class=" requiredField">VPN password</label>
+    <div class=""> <input type="email" name="email" value="{{ vpn_password  }}" class="emailinput form-control" required disabled id="id_email"> </div> </div>
+
+<div id="div_id_pass" class="form-group">
+    <label for="id_email" class=" requiredField">Connecting and installation</label>
+    <div class=""> <textarea type="comma" name="email" value="openvpn --config hrl.ovpn" class="emailinput form-control" required disabled id="id_email"/> apt-get install openvpn
+ openvpn --config hrl.ovpn
+</textarea>
+        <small/>Open VPN file <a href="/media/profile_pics/v.png">download</a></small>
+      </fieldset>
+
+      <div class="form-group">
+          <button class="btn btn-outline-primary" type="submit">Request new password</button>
+      </div>
+{% endblock content %}

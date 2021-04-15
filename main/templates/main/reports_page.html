@@ -1,0 +1,171 @@
+{% extends "main/base.html" %}
+{% load static %}
+{% block content %}
+ {% if reports or request.user.is_superuser %}
+<script src='https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js'></script>
+
+<div class="media">
+  <div class="media-body">
+      <h2>Report Statistics</h2>
+      <div class="container">
+        <div class="row">
+          <div class="chart-container-1 p-2" style="position: relative; height:40vh; width:550px;">
+            <canvas id="chart-1">
+              <script>
+                  var ctx = document.getElementById('chart-1').getContext('2d');
+                  var myChart = new Chart(ctx, {
+                      type: 'bar',
+                      data: {
+                          labels: {{ system_graph_labels|safe }},
+                          datasets: [{
+                              label: '# of Reports',
+                              data: {{system_graph_data|safe }},
+                              backgroundColor: [
+                                  '#e75d2a',
+                                  'rgba(0,60,113,0.85)',
+                                  '#e75d2a',
+                                  'rgba(0,60,113,0.85)',
+                                  '#e75d2a',
+                                  'rgba(0,60,113,0.85)'
+                              ],
+                              borderColor: [
+                                  '#e75d2a',
+                                  'rgba(0,60,113,0.85)',
+                                  '#e75d2a',
+                                  'rgba(0,60,113,0.85)',
+                                  '#e75d2a',
+                                  'rgba(0,60,113,0.85)'
+                              ],
+                              borderWidth: 1
+                          }]
+                      },
+                      options: {
+                      title: {
+                          display: true,
+                          text: 'System Stats'
+                      },
+                      responsive: true,
+                      maintainAspectRatio: false,
+                          scales: {
+                              yAxes: [{
+                                  ticks: {
+                                      beginAtZero: true,
+                                      fontSize: 8
+                                  }
+                              }],
+                              xAxes: [{
+                                  ticks: {
+                                      beginAtZero: true,
+                                      fontSize: 9.2
+                                  }
+                              }]
+                          }
+                      }
+                  });
+              </script>
+            </canvas>
+          </div>
+          <div class="chart-container-2 p-2" style="position: relative; height:40vh; width:550px;">
+            <canvas id="chart-2">
+              <script>
+               var ctx = document.getElementById('chart-2').getContext('2d');
+                var myChart = new Chart(ctx, {
+                      type: 'pie',
+                      data: {
+                          labels: {{ user_graph_labels|safe }},
+                          datasets: [{
+                              label: 'Your Reports',
+                              data: {{ user_graph_data|safe }},
+                              backgroundColor: [
+                                  '#606a7c',
+                                  '#5c74bc',
+                                  '#4aa8d3',
+                                  '#212121',
+                                  '#434343',
+                                  '#e75d2a'
+                              ],
+                              borderColor: [
+                                  '#606a7c',
+                                  '#5c74bc',
+                                  '#4aa8d3',
+                                  '#212121',
+                                  '#434343',
+                                  '#e75d2a'
+                              ],
+                              borderWidth: 1
+                          }]
+                      },
+                      options: {
+                       title: {
+                          display: true,
+                          text: 'Your Stats'
+                      },
+                      responsive: true,
+                      maintainAspectRatio: false,
+                          scales: {
+                              yAxes: [{
+                                  ticks: {
+                                      beginAtZero: true
+                                  }
+                              }]
+                          }
+                      }
+                  });
+              </script>
+            </canvas>
+          </div>
+        </div>
+      </div>
+
+       <h2>Submitted Reports</h2>
+    <table class="table">
+  <thead>
+    <tr>
+      <th id="table-centered" scope="col">Date</th>
+      <th id="table-centered" scope="col">Asset</th>
+      <th id="table-centered" scope="col">Report Title</th>
+      <th id="table-centered" scope="col">Status</th>
+      <th id="table-centered" scope="col">Button</th>
+    </tr>
+  </thead>
+  <tbody>
+
+  {% if user.is_superuser %}
+
+  {% for report in system_reports %}
+    <tr>
+      <td id="table-centered">{{ report.date_submitted }}</td>
+      <td id="table-centered">{{ report.get_asset_display }}</td>
+      <td id="table-centered">{{ report.title }}</td>
+      <td id="table-centered">{{ report.get_status_display }}</td>
+      <td id="table-centered">{{ report.get_status_display }}</td>
+      <td><a class="btn btn-primary btn-sm mt-1 mb-1" href="{% url 'report-detail' report.id %}">View</a></td>
+    </tr>
+   {% endfor %}
+
+  {% else %}
+
+  {% for report in reports %}
+    <tr>
+      <td id="table-centered">{{ report.date_submitted }}</td>
+      <td id="table-centered">{{ report.get_asset_display }}</td>
+      <td id="table-centered">{{ report.title }}</td>
+      <td id="table-centered">{{ report.get_status_display }}</td>
+      <td id="table-centered">{{ report.get_status_display }}</td>
+      <td><a class="btn btn-primary btn-sm mt-1 mb-1" href="{% url 'report-detail' report.id %}">View</a></td>
+    </tr>
+  {% endfor %}
+
+  {% endif %}
+
+  {% else %}
+  <div class="alert alert-info" role="alert">
+  You currently have no submitted reports. please<a href="{% url 'report-create' %}" class="alert-link"> submit a report</a> to view them here.
+  </div>
+  {% endif %}
+  </tbody>
+</table>
+  </div>
+</div>
+
+{% endblock content %}

@@ -1,0 +1,104 @@
+{% load static %}
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+
+
+<head>
+     <!-- Required meta  coolsdad tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <link rel="stylesheet" type="text/css" href="{% static 'main/main.css' %}">
+        <title>OTU ThreatCenter</title>
+</head>
+<body>
+
+    <header class="site-header">
+      <nav class="navbar navbar-expand-md navbar-dark bg-steel fixed-top" style="background-color: rgba(0,60,113,0.85); padding-bottom: -30px; margin-bottom: 20px">
+        <div class="container" style="margin-bottom: -5px; margin-top: -5px;">
+            <img style="margin: auto;" src="/media/logo/shield-removebg-preview.png"></center>
+          <a class="navbar-brand mr-4" href="{% url 'overview' %}">OTU ThreatCenter</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse mb-2" id="navbarToggle">
+            <div class="navbar-nav mr-auto">
+              <a class="nav-item nav-link" href="{% url 'overview' %}">Overview</a>
+                {% if user.is_authenticated %}
+                <a class="nav-item nav-link" href="{% url 'targets' %}">Targets</a>
+                <a class="nav-item nav-link" href="{% url 'vpn' %}">VPN</a>
+                <a class="nav-item nav-link" href="{% url 'reports-page' %}">Reports</a>
+                <a class="nav-item nav-link" href="{% url 'report-create' %}">Submit Report</a>
+                <a class="nav-item nav-link" href="{% url 'inbox' %}">Inbox</a>
+                {% endif %}
+            </div>
+            <!-- Navbar Right Side. -->
+            <div class="navbar-nav">
+                {% if user.is_authenticated %}
+                    <a class="nav-item nav-link" href="{% url 'profile' %}">Profile</a>
+                    <a class="nav-item nav-link" href="{% url 'logout' %}">Logout</a>
+                {% else %}
+                      <a class="nav-item nav-link" href="{% url 'social:begin' 'google-oauth2' %}">Login</a>
+                {% endif %}
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+<main role="main" class="container">
+    {% if user.is_authenticated %}
+        <div class="row">
+            {% if request.path == "/overview/" or request.path == "/" and request.user.legal.terms_accepted == True %}
+            <div class="col-md-4">
+            <div class="content-section">
+
+            <center><img class="img-responsive rounded-circle account-img" style="margin: auto;" src="{{ user.profile.img.url }}"></center>
+                <center style="padding-top: 20px;"><i><strong><p>{{ user.profile.username }}</p></strong></i></center>
+
+                {% if user_rank == 0 or user_stats.author.submitted_reports == 0 %}
+                    <center style="margin-bottom: 30px;"><i><strong><p>Unranked</p></strong></i></center>
+                {% else %}
+                    <center style="margin-bottom: 30px;"><i><strong><p>Rank #{{ user_rank }}</p></strong></i></center>
+                {% endif %}
+                  <ul class="list-group">
+                      <center><li class="list-group-item list-group-item-steel">Basic Stats</li></center>
+                    <li class="list-group-item list-group-item-steel">Member since: <br> {{ user.date_joined }}</li>
+                      <li class="list-group-item list-group-item-steel">Last login: {{ user.last_login }}</li>
+                    <li class="list-group-item list-group-item-steel">Reports submitted: {{ user_stats.author.submitted_reports }}</li>
+                  </ul>
+            </div>
+            </div>
+                <div class="col-md-8">
+                    {% else %}
+                    <div class="col-md-12">
+             {% endif %}
+
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+                {% block content %} {% endblock %}
+                </div>
+    </div>
+        {% else %}
+            <h3>Please login.</h3>
+        {% endif %}
+        </div>
+</main>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+
+
+</body>
+
+</html>

@@ -1,0 +1,7 @@
+Pillow>=8.1.1
+Django>=3.1.5
+django-crispy-forms>=1.11.0
+python-social-auth==0.3.6
+social-auth-app-django>=4.0.0
+django-chartjs>=2.2.1
+django-jsignature>=0.10
