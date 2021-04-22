@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from collections import OrderedDict
 from operator import getitem
 
+# We configure a context processor so that /overview/ and /profile can access the leaderboard object and display stats to the user.
+
 def global_user_stats(request):
     allowed_urls = ['/', '/overview/', '/profile/']
     if request.user.is_authenticated and request.get_full_path() in allowed_urls:
